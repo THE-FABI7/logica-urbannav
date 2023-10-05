@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Conductor} from './conductor.model';
 
 @model()
 export class Automovil extends Entity {
@@ -45,6 +46,13 @@ export class Automovil extends Entity {
   })
   Soat: string;
 
+  @property({
+    type: 'number',
+  })
+  conductorId?: number;
+
+  @hasOne(() => Conductor)
+  conductor: Conductor;
 
   constructor(data?: Partial<Automovil>) {
     super(data);
