@@ -13,43 +13,43 @@ export class Cliente extends Entity {
     type: 'string',
     required: true,
   })
-  nombre: string;
+  Nombre: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  apellido: string;
+  Apellido: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  foto: string;
+  Foto: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  telefono: string;
+  Telefono: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  correo: string;
+  Correo: string;
 
   @property({
     type: 'date',
     required: true,
   })
-  fechadenacimiento: string;
+  FechaDeNacimiento: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  numEmergencia: string;
+  NumEmergencia: string;
 
 
   constructor(data?: Partial<Cliente>) {
