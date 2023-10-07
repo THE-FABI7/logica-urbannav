@@ -1,11 +1,47 @@
-import {Entity, model, property, belongsTo, hasOne} from '@loopback/repository';
+import {Entity, belongsTo, hasOne, model, property} from '@loopback/repository';
 import {Cliente} from './cliente.model';
-import {Conductor} from './conductor.model';
-import {Factura} from './factura.model';
 import {Comentario} from './comentario.model';
+import {Conductor} from './conductor.model';
 import {EstadoSolicitud} from './estado-solicitud.model';
+import {Factura} from './factura.model';
 
-@model()
+@model({
+  settings: {
+    foreignKeys: {
+      fk_viaje_idConductor: {
+        name: 'fk_viaje_idConductor',
+        entity: 'Conductor',
+        entityKey: 'id',
+        foreignKey: 'conductorId',
+      },
+      fk_viaje_idCliente: {
+        name: 'fk_viaje_idCliente',
+        entity: 'Cliente',
+        entityKey: 'id',
+        foreignKey: 'clienteId',
+      },
+      fk_viaje_idFactura: {
+        name: 'fk_viaje_idFactura',
+        entity: 'Factura',
+        entityKey: 'id',
+        foreignKey: 'facturaId',
+      },
+      fk_viaje_idComentario: {
+        name: 'fk_viaje_idComentario',
+        entity: 'Comentario',
+        entityKey: 'id',
+        foreignKey: 'comentarioId',
+      },
+      fk_viaje_idEstadoSolitud: {
+        name: 'fk_viaje_idEstadoSolitud',
+        entity: 'EstadoSolicitud',
+        entityKey: 'id',
+        foreignKey: 'estadoSolicitudId',
+      },
+    }
+  },
+},
+)
 export class Viaje extends Entity {
   @property({
     type: 'number',

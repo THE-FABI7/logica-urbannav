@@ -1,8 +1,20 @@
-import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
-import {Viaje} from './viaje.model';
+import {Entity, hasMany, hasOne, model, property} from '@loopback/repository';
 import {Automovil} from './automovil.model';
+import {Viaje} from './viaje.model';
 
-@model()
+@model({
+  settings: {
+    foreignKeys: {
+      fk_conductor_idAutomovil: {
+        name: 'fk_conductor_idAutomovil',
+        entity: 'Automovil',
+        entityKey: 'id',
+        foreignKey: 'automovilId',
+      },
+    },
+  },
+},
+)
 export class Conductor extends Entity {
   @property({
     type: 'number',

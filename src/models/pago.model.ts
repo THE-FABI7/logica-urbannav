@@ -1,8 +1,19 @@
-import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
+import {Entity, belongsTo, hasMany, model, property} from '@loopback/repository';
 import {Cliente} from './cliente.model';
 import {Factura} from './factura.model';
 
-@model()
+@model({
+  settings: {
+    foreignKeys: {
+      fk_pago_idCliente: {
+        name: 'fk_pago_idCliente',
+        entity: 'Cliente',
+        entityKey: 'id',
+        foreignKey: 'clienteId',
+      },
+    },
+  },
+},)
 export class Pago extends Entity {
   @property({
     type: 'number',
