@@ -19,13 +19,19 @@ import {
 } from '@loopback/rest';
 import {Conductor} from '../models';
 import {ConductorRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 
 export class ConductorController {
   constructor(
     @repository(ConductorRepository)
-    public conductorRepository : ConductorRepository,
-  ) {}
+    public conductorRepository: ConductorRepository,
+  ) { }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+  })
   @post('/conductor')
   @response(200, {
     description: 'Conductor model instance',
@@ -47,6 +53,10 @@ export class ConductorController {
     return this.conductorRepository.create(conductor);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/conductor/count')
   @response(200, {
     description: 'Conductor model count',
@@ -58,6 +68,10 @@ export class ConductorController {
     return this.conductorRepository.count(where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/conductor')
   @response(200, {
     description: 'Array of Conductor model instances',
@@ -76,6 +90,10 @@ export class ConductorController {
     return this.conductorRepository.find(filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/conductor')
   @response(200, {
     description: 'Conductor PATCH success count',
@@ -95,6 +113,10 @@ export class ConductorController {
     return this.conductorRepository.updateAll(conductor, where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/conductor/{id}')
   @response(200, {
     description: 'Conductor model instance',
@@ -111,6 +133,10 @@ export class ConductorController {
     return this.conductorRepository.findById(id, filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/conductor/{id}')
   @response(204, {
     description: 'Conductor PATCH success',
@@ -129,6 +155,10 @@ export class ConductorController {
     await this.conductorRepository.updateById(id, conductor);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @put('/conductor/{id}')
   @response(204, {
     description: 'Conductor PUT success',
@@ -140,6 +170,10 @@ export class ConductorController {
     await this.conductorRepository.replaceById(id, conductor);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+  })
   @del('/conductor/{id}')
   @response(204, {
     description: 'Conductor DELETE success',

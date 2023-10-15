@@ -19,13 +19,19 @@ import {
 } from '@loopback/rest';
 import {Automovil} from '../models';
 import {AutomovilRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 
 export class AutomovilController {
   constructor(
     @repository(AutomovilRepository)
-    public automovilRepository : AutomovilRepository,
-  ) {}
+    public automovilRepository: AutomovilRepository,
+  ) { }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+  })
   @post('/automovil')
   @response(200, {
     description: 'Automovil model instance',
@@ -47,6 +53,10 @@ export class AutomovilController {
     return this.automovilRepository.create(automovil);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/automovil/count')
   @response(200, {
     description: 'Automovil model count',
@@ -58,6 +68,10 @@ export class AutomovilController {
     return this.automovilRepository.count(where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/automovil')
   @response(200, {
     description: 'Array of Automovil model instances',
@@ -76,6 +90,10 @@ export class AutomovilController {
     return this.automovilRepository.find(filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/automovil')
   @response(200, {
     description: 'Automovil PATCH success count',
@@ -95,6 +113,10 @@ export class AutomovilController {
     return this.automovilRepository.updateAll(automovil, where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/automovil/{id}')
   @response(200, {
     description: 'Automovil model instance',
@@ -111,6 +133,10 @@ export class AutomovilController {
     return this.automovilRepository.findById(id, filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/automovil/{id}')
   @response(204, {
     description: 'Automovil PATCH success',
@@ -129,6 +155,10 @@ export class AutomovilController {
     await this.automovilRepository.updateById(id, automovil);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @put('/automovil/{id}')
   @response(204, {
     description: 'Automovil PUT success',
@@ -140,6 +170,10 @@ export class AutomovilController {
     await this.automovilRepository.replaceById(id, automovil);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+  })
   @del('/automovil/{id}')
   @response(204, {
     description: 'Automovil DELETE success',

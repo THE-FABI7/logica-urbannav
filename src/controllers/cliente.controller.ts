@@ -28,6 +28,10 @@ export class ClienteController {
     public clienteRepository : ClienteRepository,
   ) {}
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+  })
   @post('/cliente')
   @response(200, {
     description: 'Cliente model instance',
@@ -49,6 +53,10 @@ export class ClienteController {
     return this.clienteRepository.create(cliente);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/cliente/count')
   @response(200, {
     description: 'Cliente model count',
@@ -82,6 +90,10 @@ export class ClienteController {
     return this.clienteRepository.find(filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/cliente')
   @response(200, {
     description: 'Cliente PATCH success count',
@@ -101,6 +113,10 @@ export class ClienteController {
     return this.clienteRepository.updateAll(cliente, where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/cliente/{id}')
   @response(200, {
     description: 'Cliente model instance',
@@ -117,6 +133,10 @@ export class ClienteController {
     return this.clienteRepository.findById(id, filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/cliente/{id}')
   @response(204, {
     description: 'Cliente PATCH success',
@@ -135,6 +155,10 @@ export class ClienteController {
     await this.clienteRepository.updateById(id, cliente);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @put('/cliente/{id}')
   @response(204, {
     description: 'Cliente PUT success',
@@ -146,6 +170,10 @@ export class ClienteController {
     await this.clienteRepository.replaceById(id, cliente);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+  })
   @del('/cliente/{id}')
   @response(204, {
     description: 'Cliente DELETE success',

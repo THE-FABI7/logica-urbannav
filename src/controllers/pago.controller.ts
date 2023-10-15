@@ -19,13 +19,19 @@ import {
 } from '@loopback/rest';
 import {Pago} from '../models';
 import {PagoRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 
 export class PagoController {
   constructor(
     @repository(PagoRepository)
-    public pagoRepository : PagoRepository,
-  ) {}
+    public pagoRepository: PagoRepository,
+  ) { }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+  })
   @post('/pago')
   @response(200, {
     description: 'Pago model instance',
@@ -47,6 +53,10 @@ export class PagoController {
     return this.pagoRepository.create(pago);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/pago/count')
   @response(200, {
     description: 'Pago model count',
@@ -58,6 +68,10 @@ export class PagoController {
     return this.pagoRepository.count(where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/pago')
   @response(200, {
     description: 'Array of Pago model instances',
@@ -76,6 +90,10 @@ export class PagoController {
     return this.pagoRepository.find(filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/pago')
   @response(200, {
     description: 'Pago PATCH success count',
@@ -95,6 +113,10 @@ export class PagoController {
     return this.pagoRepository.updateAll(pago, where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/pago/{id}')
   @response(200, {
     description: 'Pago model instance',
@@ -111,6 +133,10 @@ export class PagoController {
     return this.pagoRepository.findById(id, filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/pago/{id}')
   @response(204, {
     description: 'Pago PATCH success',
@@ -129,6 +155,10 @@ export class PagoController {
     await this.pagoRepository.updateById(id, pago);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @put('/pago/{id}')
   @response(204, {
     description: 'Pago PUT success',
@@ -140,6 +170,10 @@ export class PagoController {
     await this.pagoRepository.replaceById(id, pago);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+  })
   @del('/pago/{id}')
   @response(204, {
     description: 'Pago DELETE success',

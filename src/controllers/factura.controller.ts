@@ -19,13 +19,19 @@ import {
 } from '@loopback/rest';
 import {Factura} from '../models';
 import {FacturaRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 
 export class FacturaController {
   constructor(
     @repository(FacturaRepository)
-    public facturaRepository : FacturaRepository,
-  ) {}
+    public facturaRepository: FacturaRepository,
+  ) { }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+  })
   @post('/factura')
   @response(200, {
     description: 'Factura model instance',
@@ -47,6 +53,10 @@ export class FacturaController {
     return this.facturaRepository.create(factura);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/factura/count')
   @response(200, {
     description: 'Factura model count',
@@ -58,6 +68,10 @@ export class FacturaController {
     return this.facturaRepository.count(where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/factura')
   @response(200, {
     description: 'Array of Factura model instances',
@@ -76,6 +90,10 @@ export class FacturaController {
     return this.facturaRepository.find(filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/factura')
   @response(200, {
     description: 'Factura PATCH success count',
@@ -95,6 +113,10 @@ export class FacturaController {
     return this.facturaRepository.updateAll(factura, where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/factura/{id}')
   @response(200, {
     description: 'Factura model instance',
@@ -111,6 +133,10 @@ export class FacturaController {
     return this.facturaRepository.findById(id, filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/factura/{id}')
   @response(204, {
     description: 'Factura PATCH success',
@@ -129,6 +155,10 @@ export class FacturaController {
     await this.facturaRepository.updateById(id, factura);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @put('/factura/{id}')
   @response(204, {
     description: 'Factura PUT success',
@@ -140,6 +170,10 @@ export class FacturaController {
     await this.facturaRepository.replaceById(id, factura);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+  })
   @del('/factura/{id}')
   @response(204, {
     description: 'Factura DELETE success',

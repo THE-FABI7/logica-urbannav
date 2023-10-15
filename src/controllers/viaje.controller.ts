@@ -19,13 +19,19 @@ import {
 } from '@loopback/rest';
 import {Viaje} from '../models';
 import {ViajeRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 
 export class ViajeController {
   constructor(
     @repository(ViajeRepository)
-    public viajeRepository : ViajeRepository,
-  ) {}
+    public viajeRepository: ViajeRepository,
+  ) { }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+  })
   @post('/viaje')
   @response(200, {
     description: 'Viaje model instance',
@@ -47,6 +53,10 @@ export class ViajeController {
     return this.viajeRepository.create(viaje);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/viaje/count')
   @response(200, {
     description: 'Viaje model count',
@@ -58,6 +68,10 @@ export class ViajeController {
     return this.viajeRepository.count(where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/viaje')
   @response(200, {
     description: 'Array of Viaje model instances',
@@ -76,6 +90,10 @@ export class ViajeController {
     return this.viajeRepository.find(filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/viaje')
   @response(200, {
     description: 'Viaje PATCH success count',
@@ -95,6 +113,10 @@ export class ViajeController {
     return this.viajeRepository.updateAll(viaje, where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/viaje/{id}')
   @response(200, {
     description: 'Viaje model instance',
@@ -111,6 +133,10 @@ export class ViajeController {
     return this.viajeRepository.findById(id, filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/viaje/{id}')
   @response(204, {
     description: 'Viaje PATCH success',
@@ -129,6 +155,10 @@ export class ViajeController {
     await this.viajeRepository.updateById(id, viaje);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @put('/viaje/{id}')
   @response(204, {
     description: 'Viaje PUT success',
@@ -140,6 +170,10 @@ export class ViajeController {
     await this.viajeRepository.replaceById(id, viaje);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+  })
   @del('/viaje/{id}')
   @response(204, {
     description: 'Viaje DELETE success',

@@ -19,13 +19,19 @@ import {
 } from '@loopback/rest';
 import {Comentario} from '../models';
 import {ComentarioRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 
 export class ComentarioController {
   constructor(
     @repository(ComentarioRepository)
-    public comentarioRepository : ComentarioRepository,
-  ) {}
+    public comentarioRepository: ComentarioRepository,
+  ) { }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+  })
   @post('/comentario')
   @response(200, {
     description: 'Comentario model instance',
@@ -47,6 +53,10 @@ export class ComentarioController {
     return this.comentarioRepository.create(comentario);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/comentario/count')
   @response(200, {
     description: 'Comentario model count',
@@ -58,6 +68,10 @@ export class ComentarioController {
     return this.comentarioRepository.count(where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/comentario')
   @response(200, {
     description: 'Array of Comentario model instances',
@@ -76,6 +90,10 @@ export class ComentarioController {
     return this.comentarioRepository.find(filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/comentario')
   @response(200, {
     description: 'Comentario PATCH success count',
@@ -95,6 +113,10 @@ export class ComentarioController {
     return this.comentarioRepository.updateAll(comentario, where);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+  })
   @get('/comentario/{id}')
   @response(200, {
     description: 'Comentario model instance',
@@ -111,6 +133,10 @@ export class ComentarioController {
     return this.comentarioRepository.findById(id, filter);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @patch('/comentario/{id}')
   @response(204, {
     description: 'Comentario PATCH success',
@@ -129,6 +155,10 @@ export class ComentarioController {
     await this.comentarioRepository.updateById(id, comentario);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+  })
   @put('/comentario/{id}')
   @response(204, {
     description: 'Comentario PUT success',
@@ -140,6 +170,10 @@ export class ComentarioController {
     await this.comentarioRepository.replaceById(id, comentario);
   }
 
+  @authenticate({
+    strategy: 'auth',
+    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+  })
   @del('/comentario/{id}')
   @response(204, {
     description: 'Comentario DELETE success',
