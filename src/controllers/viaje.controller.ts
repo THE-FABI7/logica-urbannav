@@ -30,7 +30,7 @@ export class ViajeController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+    options: [configuracionSeguridad.menuViajeId, configuracionSeguridad.guardarAccion]
   })
   @post('/viaje')
   @response(200, {
@@ -55,7 +55,7 @@ export class ViajeController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuViajeId, configuracionSeguridad.listarAccion]
   })
   @get('/viaje/count')
   @response(200, {
@@ -70,7 +70,7 @@ export class ViajeController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuViajeId, configuracionSeguridad.listarAccion]
   })
   @get('/viaje')
   @response(200, {
@@ -92,7 +92,7 @@ export class ViajeController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuViajeId, configuracionSeguridad.editarAccion]
   })
   @patch('/viaje')
   @response(200, {
@@ -115,7 +115,7 @@ export class ViajeController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuViajeId, configuracionSeguridad.listarAccion]
   })
   @get('/viaje/{id}')
   @response(200, {
@@ -135,7 +135,7 @@ export class ViajeController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuViajeId, configuracionSeguridad.editarAccion]
   })
   @patch('/viaje/{id}')
   @response(204, {
@@ -157,7 +157,7 @@ export class ViajeController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuViajeId, configuracionSeguridad.editarAccion]
   })
   @put('/viaje/{id}')
   @response(204, {
@@ -172,7 +172,7 @@ export class ViajeController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+    options: [configuracionSeguridad.menuViajeId, configuracionSeguridad.eliminarAccion]
   })
   @del('/viaje/{id}')
   @response(204, {

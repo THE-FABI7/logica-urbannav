@@ -30,7 +30,7 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.guardarAccion]
   })
   @post('/conductor')
   @response(200, {
@@ -55,7 +55,7 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.listarAccion]
   })
   @get('/conductor/count')
   @response(200, {
@@ -70,7 +70,7 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.listarAccion]
   })
   @get('/conductor')
   @response(200, {
@@ -92,7 +92,7 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.editarAccion]
   })
   @patch('/conductor')
   @response(200, {
@@ -115,7 +115,7 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.listarAccion]
   })
   @get('/conductor/{id}')
   @response(200, {
@@ -135,7 +135,7 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.editarAccion]
   })
   @patch('/conductor/{id}')
   @response(204, {
@@ -157,7 +157,7 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.editarAccion]
   })
   @put('/conductor/{id}')
   @response(204, {
@@ -172,7 +172,7 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.eliminarAccion]
   })
   @del('/conductor/{id}')
   @response(204, {

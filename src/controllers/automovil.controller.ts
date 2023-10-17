@@ -30,7 +30,7 @@ export class AutomovilController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+    options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.guardarAccion]
   })
   @post('/automovil')
   @response(200, {
@@ -55,7 +55,7 @@ export class AutomovilController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.listarAccion]
   })
   @get('/automovil/count')
   @response(200, {
@@ -70,7 +70,7 @@ export class AutomovilController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.listarAccion]
   })
   @get('/automovil')
   @response(200, {
@@ -92,7 +92,7 @@ export class AutomovilController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.editarAccion]
   })
   @patch('/automovil')
   @response(200, {
@@ -115,7 +115,7 @@ export class AutomovilController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.listarAccion]
   })
   @get('/automovil/{id}')
   @response(200, {
@@ -135,7 +135,7 @@ export class AutomovilController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.editarAccion]
   })
   @patch('/automovil/{id}')
   @response(204, {
@@ -157,7 +157,7 @@ export class AutomovilController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.editarAccion]
   })
   @put('/automovil/{id}')
   @response(204, {
@@ -172,7 +172,7 @@ export class AutomovilController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+    options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.eliminarAccion]
   })
   @del('/automovil/{id}')
   @response(204, {

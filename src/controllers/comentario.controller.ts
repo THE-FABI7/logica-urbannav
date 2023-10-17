@@ -30,7 +30,7 @@ export class ComentarioController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+    options: [configuracionSeguridad.menuComentarioId, configuracionSeguridad.guardarAccion]
   })
   @post('/comentario')
   @response(200, {
@@ -55,7 +55,7 @@ export class ComentarioController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuComentarioId, configuracionSeguridad.listarAccion]
   })
   @get('/comentario/count')
   @response(200, {
@@ -70,7 +70,7 @@ export class ComentarioController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuComentarioId, configuracionSeguridad.listarAccion]
   })
   @get('/comentario')
   @response(200, {
@@ -92,7 +92,7 @@ export class ComentarioController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuComentarioId, configuracionSeguridad.editarAccion]
   })
   @patch('/comentario')
   @response(200, {
@@ -115,7 +115,7 @@ export class ComentarioController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuComentarioId, configuracionSeguridad.listarAccion]
   })
   @get('/comentario/{id}')
   @response(200, {
@@ -135,7 +135,7 @@ export class ComentarioController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuComentarioId, configuracionSeguridad.editarAccion]
   })
   @patch('/comentario/{id}')
   @response(204, {
@@ -157,7 +157,7 @@ export class ComentarioController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuComentarioId, configuracionSeguridad.editarAccion]
   })
   @put('/comentario/{id}')
   @response(204, {
@@ -172,7 +172,7 @@ export class ComentarioController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+    options: [configuracionSeguridad.menuComentarioId, configuracionSeguridad.eliminarAccion]
   })
   @del('/comentario/{id}')
   @response(204, {

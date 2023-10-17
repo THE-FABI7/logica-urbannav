@@ -30,7 +30,7 @@ export class PagoController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+    options: [configuracionSeguridad.menuPagoId, configuracionSeguridad.guardarAccion]
   })
   @post('/pago')
   @response(200, {
@@ -55,7 +55,7 @@ export class PagoController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuPagoId, configuracionSeguridad.listarAccion]
   })
   @get('/pago/count')
   @response(200, {
@@ -70,7 +70,7 @@ export class PagoController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuPagoId, configuracionSeguridad.listarAccion]
   })
   @get('/pago')
   @response(200, {
@@ -92,7 +92,7 @@ export class PagoController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuPagoId, configuracionSeguridad.editarAccion]
   })
   @patch('/pago')
   @response(200, {
@@ -115,7 +115,7 @@ export class PagoController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuPagoId, configuracionSeguridad.listarAccion]
   })
   @get('/pago/{id}')
   @response(200, {
@@ -135,7 +135,7 @@ export class PagoController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuPagoId, configuracionSeguridad.editarAccion]
   })
   @patch('/pago/{id}')
   @response(204, {
@@ -157,7 +157,7 @@ export class PagoController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuPagoId, configuracionSeguridad.editarAccion]
   })
   @put('/pago/{id}')
   @response(204, {
@@ -172,7 +172,7 @@ export class PagoController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+    options: [configuracionSeguridad.menuPagoId, configuracionSeguridad.eliminarAccion]
   })
   @del('/pago/{id}')
   @response(204, {

@@ -30,7 +30,7 @@ export class FacturaController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.guardarAccion]
+    options: [configuracionSeguridad.menuFacturaId, configuracionSeguridad.guardarAccion]
   })
   @post('/factura')
   @response(200, {
@@ -55,7 +55,7 @@ export class FacturaController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuFacturaId, configuracionSeguridad.listarAccion]
   })
   @get('/factura/count')
   @response(200, {
@@ -70,7 +70,7 @@ export class FacturaController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuFacturaId, configuracionSeguridad.listarAccion]
   })
   @get('/factura')
   @response(200, {
@@ -92,7 +92,7 @@ export class FacturaController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuFacturaId, configuracionSeguridad.editarAccion]
   })
   @patch('/factura')
   @response(200, {
@@ -115,7 +115,7 @@ export class FacturaController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
+    options: [configuracionSeguridad.menuFacturaId, configuracionSeguridad.listarAccion]
   })
   @get('/factura/{id}')
   @response(200, {
@@ -135,7 +135,7 @@ export class FacturaController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuFacturaId, configuracionSeguridad.editarAccion]
   })
   @patch('/factura/{id}')
   @response(204, {
@@ -157,7 +157,7 @@ export class FacturaController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.editarAccion]
+    options: [configuracionSeguridad.menuFacturaId, configuracionSeguridad.editarAccion]
   })
   @put('/factura/{id}')
   @response(204, {
@@ -172,7 +172,7 @@ export class FacturaController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.eliminarAccion]
+    options: [configuracionSeguridad.menuFacturaId, configuracionSeguridad.eliminarAccion]
   })
   @del('/factura/{id}')
   @response(204, {
