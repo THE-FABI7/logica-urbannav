@@ -1,15 +1,16 @@
 import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
+import {ConfiguracionEntorno} from '../config/configuracion.entorno';
 
 const config = {
   name: 'mysql',
   connector: 'mysql',
   url: '',
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: '1234',
-  database: 'urbanavDb'
+  host: ConfiguracionEntorno.conexionRDS,
+  port: ConfiguracionEntorno.puertoRDS,
+  user: ConfiguracionEntorno.usuarioRDS,
+  password: ConfiguracionEntorno.passUsuarioRDS,
+  database: ConfiguracionEntorno.baseDatosRDS
 };
 
 // Observe application's life cycle to disconnect the datasource when

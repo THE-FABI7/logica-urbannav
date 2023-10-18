@@ -1,4 +1,6 @@
-import {ApplicationConfig, App} from './application';
+require('dotenv').config()
+
+import {App, ApplicationConfig} from './application';
 
 export * from './application';
 
