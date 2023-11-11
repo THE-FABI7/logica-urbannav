@@ -24,3 +24,7 @@ export * from './factura.controller';
 export * from './comentario.controller';
 export * from './estado-solicitud.controller';
 export * from './administrador-de-archivos.controller';
+export * from './distance-location.controller';
+export * from './location.controller';
+export * from './distance.controller';
+export * from './graph.controller';

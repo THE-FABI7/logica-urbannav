@@ -60,4 +60,5 @@ export class AuthStrategy implements AuthenticationStrategy {
     }
     throw new HttpErrors[401]("No es posible realizar esta acción por falta de un token");
   }
+
 }

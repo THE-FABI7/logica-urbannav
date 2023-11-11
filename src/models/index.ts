@@ -6,3 +6,5 @@ export * from './factura.model';
 export * from './viaje.model';
 export * from './comentario.model';
 export * from './estado-solicitud.model';
+export * from './location.model';
+export * from './distance.model';

@@ -6,3 +6,5 @@ export * from './estado-solicitud.repository';
 export * from './factura.repository';
 export * from './pago.repository';
 export * from './viaje.repository';
+export * from './distance.repository';
+export * from './location.repository';
