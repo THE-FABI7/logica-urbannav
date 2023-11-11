@@ -104,6 +104,48 @@ export class GraphController {
     return cost;
   }
 
+  @post('/distanciayCostoViaje')
+  @response(200, {
+    description: 'Dijkstra algorithm',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            distance: {type: 'number'},
+            cost: {type: 'number'},
+          },
+        },
+      },
+    },
+  })
+  async distanciayCostoViaje(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              startNodeId: {type: 'string'},
+              endNodeId: {type: 'string'},
+            },
+          },
+        },
+      },
+    })
+    requestParams: {startNodeId: string; endNodeId: string},
+  ): Promise<{distance: number; cost: number}> {
+    const {startNodeId, endNodeId} = requestParams;
+    try {
+      const result = await this.graphService.dijkstraTotalDise(startNodeId, endNodeId);
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error al calcular la distancia y el costo del viaje.');
+    }
+  }
+
   @post('/nodosVecinos')
   @response(200, {
     description: 'Dijkstra algorithm',

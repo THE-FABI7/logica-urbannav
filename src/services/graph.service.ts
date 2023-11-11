@@ -1,11 +1,11 @@
 import { /* inject, */ BindingScope, injectable} from '@loopback/core';
 import {repository} from '@loopback/repository';
+import fetch from 'node-fetch';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 import {Edge} from '../graph/edge';
 import {Graph} from '../graph/graph';
 import {Node} from '../graph/node';
 import {DistanceRepository, LocationRepository} from '../repositories';
-import {configuracionSeguridad} from '../config/configuracion.seguridad';
-import fetch from 'node-fetch';
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class GraphService {
@@ -171,29 +171,85 @@ export class GraphService {
       });
     }
 
-    const urlVariablesEntorno = `${configuracionSeguridad.enlaceMicroservicioSeguridad}/variables-general-del-sistemas`;
-    try {
-      await fetch(urlVariablesEntorno, {
-        method: 'get',
-        headers: {'Content-Type': 'application/json'},
-      }).then((res: any) => res.json())
-        .then((json: any) => {
-          if (json) {
-            const variablesEntorno = json;
-            const distanciaTotal = distances[endNodeId];
-            const precioPorKilometro = variablesEntorno.precioPorKilometro;
-            const precioTotal = distanciaTotal * precioPorKilometro;
-            console.log("distanciaTotal = " + distanciaTotal,"PrecioxKM = " + precioPorKilometro,"precioTotal = " + precioTotal);
-            return precioTotal;
-          }
-        });
-    } catch (e) {
-
-    }
     // Obtener la distancia total recorrida hasta el nodo de destino
     const totalDistance = distances[endNodeId];
 
     return totalDistance !== Infinity ? totalDistance : -1; // Devolver -1 si no hay un camino válido
+  }
+
+  async dijkstraTotalDise(startNodeId: string, endNodeId: string): Promise<{distance: number; cost: number}> {
+    const distances: Record<string, number> = {};
+    const visited: Record<string, boolean> = {};
+    const graph = await this.buildGraph();
+    const nodes = graph.getNodes();
+    let totalCost = 0; // Inicializar totalCost
+    let precioPorKilometro = 0;
+
+    try {
+      const urlVariablesEntorno = `${configuracionSeguridad.enlaceMicroservicioSeguridad}/variables-general-del-sistemas`;
+      const response = await fetch(urlVariablesEntorno, {
+        method: 'get',
+        headers: {'Content-Type': 'application/json'},
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        const variablesEntorno = Array.isArray(json) ? json[0] : json;
+        precioPorKilometro = variablesEntorno.valorporKilometro / 1000;
+        totalCost = precioPorKilometro;
+      }
+    } catch (e) {
+      // Manejar errores de la solicitud a la API de variables de entorno
+      console.error('Error al obtener variables de entorno:', e);
+    }
+
+    // Inicialización de distancias y costos
+    nodes.forEach((node) => {
+      distances[node.getId()] = Infinity;
+      visited[node.getId()] = false;
+    });
+
+    distances[startNodeId] = 0;
+
+    // Función auxiliar para encontrar el nodo no visitado con la menor distancia
+    const findMinDistanceNode = () => {
+      let minDistance = Infinity;
+      let minNodeId = null;
+      for (const nodeId in distances) {
+        if (!visited[nodeId] && distances[nodeId] < minDistance) {
+          minDistance = distances[nodeId];
+          minNodeId = nodeId;
+        }
+      }
+      return minNodeId;
+    };
+
+    // Algoritmo de Dijkstra
+    for (let i = 0; i < nodes.length; i++) {
+      const currentNodeId = findMinDistanceNode();
+
+      if (currentNodeId === null || distances[currentNodeId] === Infinity) {
+        break; // Todos los nodos inalcanzables han sido visitados
+      }
+
+      const currentNode = graph.getNodeById(currentNodeId);
+      visited[currentNodeId] = true;
+
+      // Actualizar distancias y costo para los nodos vecinos
+      currentNode?.getEdges().forEach((edge: Edge) => {
+        const neighborNodeId = edge.getNode().getId();
+        const tentativeDistance = distances[currentNodeId] + edge.getWeight();
+
+        if (tentativeDistance < distances[neighborNodeId]) {
+          distances[neighborNodeId] = tentativeDistance;
+        }
+      });
+    }
+
+    const totalDistance = distances[endNodeId];
+    totalCost = totalDistance * precioPorKilometro;
+
+    return {distance: totalDistance, cost: totalCost};
   }
 
   async getNearbyNodeIds(startNodeId: string, maxDistance: number): Promise<string[]> {
