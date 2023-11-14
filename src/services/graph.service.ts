@@ -187,9 +187,16 @@ export class GraphService {
 
     try {
       const urlVariablesEntorno = `${configuracionSeguridad.enlaceMicroservicioSeguridad}/variables-general-del-sistemas`;
+
+      // Obtener el token de acceso desde tu sistema de autenticación
+      const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZmFiaWFuVXJiYW5uYXYgYXBlbGxpZG9wIiwicm9sZSI6IjY1MTU4MDdjNzk4NTcyMjMzODY5Mzg5ZCIsImVtYWlsIjoiZmFiaWFuZ3VhbmNoYTEzQGdtYWlsLmNvbSIsImlhdCI6MTY5OTgxODM4M30.XvdnBGyc4zzKHr6lHO2FE08iNRqIXch52YF4yZy8k3Q'; // Reemplaza con tu lógica para obtener el token
+
       const response = await fetch(urlVariablesEntorno, {
         method: 'get',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
       });
 
       if (response.ok) {
@@ -251,6 +258,7 @@ export class GraphService {
 
     return {distance: totalDistance, cost: totalCost};
   }
+
 
   async getNearbyNodeIds(startNodeId: string, maxDistance: number): Promise<string[]> {
     const distances: Record<string, number> = {};

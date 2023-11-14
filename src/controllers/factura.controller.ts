@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,26 +8,65 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
-import {Factura} from '../models';
-import {FacturaRepository} from '../repositories';
-import {authenticate} from '@loopback/authentication';
+import axios from 'axios';
 import {configuracionSeguridad} from '../config/configuracion.seguridad';
+import {Factura} from '../models';
+import {ClienteRepository, FacturaRepository, PagoRepository, ViajeRepository} from '../repositories';
 
 export class FacturaController {
   constructor(
     @repository(FacturaRepository)
     public facturaRepository: FacturaRepository,
+    @repository(PagoRepository)
+    public pagoRepository: PagoRepository,
+    @repository(ViajeRepository)
+    public viajeRepository: ViajeRepository,
+    @repository(ClienteRepository)
+    public clienteRepository: ClienteRepository,
   ) { }
+
+
+  //TODO: HACER EL METODO PARA GENERAR LA FACTURA
+  @post('/generar-factura')
+  @response(200, {
+    description: 'Factura model instance',
+    content: {'application/json': {schema: getModelSchemaRef(Factura)}},
+  })
+  async generateFactura(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Factura, {
+            title: 'NewFactura',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    factura: Omit<Factura, 'idFactura'>,
+  ): Promise<Factura> {
+    let facturaCreada = await this.facturaRepository.create(factura);
+    let viaje = await this.viajeRepository.findById(factura.viajeId);
+    let cliente = await this.clienteRepository.findById(viaje.clienteId);
+    axios.post('http://localhost:5178/correo-bienvenida', {
+      to: cliente.Correo,
+      name: cliente.Nombre,
+      content: `Hola ${cliente.Nombre} ${cliente.Apellido}, tu factura del viaje ${viaje.id} es de pesos.`,
+      subject: 'Factura de viaje'
+    })
+    return facturaCreada;
+  }
+
 
   @authenticate({
     strategy: 'auth',
