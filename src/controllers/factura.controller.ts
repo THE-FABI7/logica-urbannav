@@ -18,11 +18,13 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import axios from 'axios';
+//import axios from 'axios';
+import {service} from '@loopback/core';
 import {configuracionSeguridad} from '../config/configuracion.seguridad';
+import {configuracionNotificaciones} from '../config/notificaciones.config';
 import {Factura} from '../models';
-import {ClienteRepository, FacturaRepository, PagoRepository, ViajeRepository} from '../repositories';
-
+import {ClienteRepository, ConductorRepository, FacturaRepository, PagoRepository, ViajeRepository} from '../repositories';
+import {NotificacionesService} from '../services/notificaciones.service';
 export class FacturaController {
   constructor(
     @repository(FacturaRepository)
@@ -33,6 +35,10 @@ export class FacturaController {
     public viajeRepository: ViajeRepository,
     @repository(ClienteRepository)
     public clienteRepository: ClienteRepository,
+    @repository(ConductorRepository)
+    public conductorRepository: ConductorRepository,
+    @service(NotificacionesService)
+    public servicioNotificaciones: NotificacionesService,
   ) { }
 
 
@@ -58,14 +64,40 @@ export class FacturaController {
     let facturaCreada = await this.facturaRepository.create(factura);
     let viaje = await this.viajeRepository.findById(factura.viajeId);
     let cliente = await this.clienteRepository.findById(viaje.clienteId);
-    axios.post('http://localhost:5178/correo-bienvenida', {
-      to: cliente.Correo,
-      name: cliente.Nombre,
-      content: `Hola ${cliente.Nombre} ${cliente.Apellido}, tu factura del viaje ${viaje.id} es de pesos.`,
-      subject: 'Factura de viaje'
-    })
+    let conductor = await this.conductorRepository.findById(viaje.conductorId);
+
+    console.log(viaje.id);
+
+    //Notificar de la creacion de cuenta via correo electronico
+    try {
+      let datos = {
+        correoDestino: cliente.Correo,
+        nombreDestino: cliente.Nombre,
+        asuntoCorreo: 'Factura de viaje',
+        contenidoCorreo: `factura numero: ${viaje.id}.\n
+                          Cliente: ${cliente.Nombre + " " + cliente.Apellido}.\n
+                          Conductor: ${conductor.Nombre + " " + conductor.Apellido}.\n
+                          Origen: ${viaje.Origen}.\n
+                          Destino: ${viaje.Destino}.\n
+                          \n-----------------------------\n
+                          Valor: ${factura.Precio} COP`,
+        Viajeid: viaje.id?.toString(),
+      };
+
+      let url = configuracionNotificaciones.Facturacion;
+      try {
+        this.servicioNotificaciones.EnviarNotificacion(datos, url);
+        console.log('Mensaje aceptado');
+      } catch (error) {
+        console.log('error');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     return facturaCreada;
   }
+
 
 
   @authenticate({
