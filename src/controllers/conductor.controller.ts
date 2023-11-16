@@ -170,6 +170,25 @@ export class ConductorController {
     await this.conductorRepository.replaceById(id, conductor);
   }
 
+  @patch('/conductor/{id}/estado')
+  @response(204, {
+    description: 'Conductor PATCH success',
+  })
+  async ocuparConductor(
+    @param.path.number('id') id: number,
+  ): Promise<void> {
+    const conductor: Conductor = await this.conductorRepository.findById(id);
+
+    if (!conductor) {
+      throw new Error(`Conductor con ID ${id} no encontrado.`);
+    }
+
+    // Actualizar el estado a "OCUPADO"
+    conductor.Estado = 'OCUPADO';
+
+    // Guardar el cambio
+    await this.conductorRepository.update(conductor);
+  }
   @authenticate({
     strategy: 'auth',
     options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.eliminarAccion]

@@ -1,12 +1,12 @@
 import {authenticate} from '@loopback/authentication';
-import {service} from '@loopback/core';
+import {inject, service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
-  repository,
   Where,
+  repository,
 } from '@loopback/repository';
 import {
   del,
@@ -23,6 +23,7 @@ import {configuracionSeguridad} from '../config/configuracion.seguridad';
 import {Viaje} from '../models';
 import {ConductorRepository, ViajeRepository} from '../repositories';
 import {GraphService} from '../services';
+import {ConductorController} from './conductor.controller';
 
 export class ViajeController {
   constructor(
@@ -32,6 +33,8 @@ export class ViajeController {
     public graphService: GraphService,
     @repository(ConductorRepository)
     public ConductorRepository: ConductorRepository,
+    @inject('controllers.ConductorController')
+    public conductorController: ConductorController,
   ) { }
 
 
@@ -64,6 +67,9 @@ export class ViajeController {
       // Asignar el conductor al viaje
       if (conductorLibre) {
         viaje.conductorId = conductorLibre;
+
+        await this.conductorController.ocuparConductor(conductorLibre);
+
       } else {
         // Manejar el caso en que no hay conductores libres en las ubicaciones cercanas
         return {message: 'No hay conductores libres en las ubicaciones cercanas.'};
