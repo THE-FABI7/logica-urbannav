@@ -60,7 +60,7 @@ export class Conductor extends Entity {
   FechaDeNacimiento: string;
 
   @property({
-    type: 'date',
+    type: 'string',
     required: true,
   })
   Vigencia: string;
@@ -75,6 +75,17 @@ export class Conductor extends Entity {
     type: 'number',
   })
   automovilId?: number;
+
+  @property({
+    type: 'string',
+  })
+  Ubicacion?: string;
+
+  @property({
+    type: 'string',
+    required: false,
+  })
+  Estado?: string;
 
   constructor(data?: Partial<Conductor>) {
     super(data);

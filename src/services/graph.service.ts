@@ -317,7 +317,7 @@ export class GraphService {
 
     // Filtrar nodos dentro de la distancia establecida
     const nearbyNodeIds: string[] = Object.keys(distances).filter(
-      (nodeId) => distances[nodeId] <= maxDistance && nodeId !== startNodeId
+      (nodeId) => distances[nodeId] <= maxDistance
     );
 
     return nearbyNodeIds;
