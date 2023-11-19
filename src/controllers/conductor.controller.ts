@@ -53,6 +53,29 @@ export class ConductorController {
     return this.conductorRepository.create(conductor);
   }
 
+
+  @post('/conductor-publico')
+  @response(200, {
+    description: 'Conductor model instance',
+    content: {'application/json': {schema: getModelSchemaRef(Conductor)}},
+  })
+  async createConductorPublico(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Conductor, {
+            title: 'NewConductor',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    conductor: Omit<Conductor, 'id'>,
+  ): Promise<Conductor> {
+    return this.conductorRepository.create(conductor);
+  }
+
+
   @authenticate({
     strategy: 'auth',
     options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.listarAccion]

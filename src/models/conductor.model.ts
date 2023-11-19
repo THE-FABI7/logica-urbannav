@@ -37,7 +37,6 @@ export class Conductor extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
   Foto: string;
 
@@ -54,7 +53,7 @@ export class Conductor extends Entity {
   Correo: string;
 
   @property({
-    type: 'date',
+    type: 'string',
     required: true,
   })
   FechaDeNacimiento: string;
