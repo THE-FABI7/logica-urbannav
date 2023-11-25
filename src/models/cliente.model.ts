@@ -25,7 +25,6 @@ export class Cliente extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
   Foto: string;
 
@@ -42,7 +41,7 @@ export class Cliente extends Entity {
   Correo: string;
 
   @property({
-    type: 'date',
+    type: 'string',
     required: true,
   })
   FechaDeNacimiento: string;

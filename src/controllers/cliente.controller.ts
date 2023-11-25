@@ -53,6 +53,30 @@ export class ClienteController {
     return this.clienteRepository.create(cliente);
   }
 
+
+  @post('/cliente-publico')
+  @response(200, {
+    description: 'Cliente model instance',
+    content: {'application/json': {schema: getModelSchemaRef(Cliente)}},
+  })
+  async createClientepublico(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Cliente, {
+            title: 'NewCliente',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    cliente: Omit<Cliente, 'id'>,
+  ): Promise<Cliente> {
+    return this.clienteRepository.create(cliente);
+  }
+
+
+
   @authenticate({
     strategy: 'auth',
     options: [configuracionSeguridad.menuClienteId, configuracionSeguridad.listarAccion]
