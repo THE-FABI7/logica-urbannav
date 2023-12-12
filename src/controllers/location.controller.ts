@@ -7,13 +7,13 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
@@ -23,8 +23,8 @@ import {LocationRepository} from '../repositories';
 export class LocationController {
   constructor(
     @repository(LocationRepository)
-    public locationRepository : LocationRepository,
-  ) {}
+    public locationRepository: LocationRepository,
+  ) { }
 
   @post('/locations')
   @response(200, {
@@ -147,4 +147,35 @@ export class LocationController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.locationRepository.deleteById(id);
   }
+  @get('/locations/ids-and-names')
+  @response(200, {
+    description: 'Get IDs and names of all locations',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: {type: 'string'},
+              name: {type: 'string'},
+            },
+          },
+        },
+      },
+    },
+  })
+  async getIdsAndNames(): Promise<{id: string; name: string}[]> {
+    try {
+      const locations = await this.locationRepository.find();
+
+      // Mapear las locaciones a un formato que contiene solo id y nombre
+      const idsAndNames = locations.map(location => ({id: location._id!, name: location.Name}));
+      return idsAndNames;
+    } catch (error) {
+      console.error('Error al obtener IDs y nombres de locaciones:', error);
+      throw error;
+    }
+  }
+
 }
