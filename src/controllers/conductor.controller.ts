@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,20 +8,19 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 import {Conductor} from '../models';
 import {ConductorRepository} from '../repositories';
-import {authenticate} from '@loopback/authentication';
-import {configuracionSeguridad} from '../config/configuracion.seguridad';
 
 export class ConductorController {
   constructor(
@@ -154,6 +154,38 @@ export class ConductorController {
     @param.filter(Conductor, {exclude: 'where'}) filter?: FilterExcludingWhere<Conductor>
   ): Promise<Conductor> {
     return this.conductorRepository.findById(id, filter);
+  }
+
+  @post('/conductor/findByCorreo')
+  @response(200, {
+    description: 'Cliente model instance',
+    content: {'application/json': {schema: getModelSchemaRef(Conductor)}}
+  })
+  async findByCorreo(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              Correo: {type: 'string'},
+            },
+          },
+        },
+      },
+    })
+    body: {Correo: string},
+  ): Promise<Conductor | null> {
+    try {
+      const foundConductor = await this.conductorRepository.findOne({
+        where: {Correo: body.Correo},
+      });
+
+      return foundConductor;
+    } catch (error) {
+      console.error('Error al buscar conductor por correo:', error);
+      throw error;
+    }
   }
 
   @authenticate({

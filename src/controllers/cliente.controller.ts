@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,26 +8,25 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
+import {configuracionSeguridad} from '../config/configuracion.seguridad';
 import {Cliente} from '../models';
 import {ClienteRepository} from '../repositories';
-import {authenticate} from '@loopback/authentication';
-import {configuracionSeguridad} from '../config/configuracion.seguridad';
 
 export class ClienteController {
   constructor(
     @repository(ClienteRepository)
-    public clienteRepository : ClienteRepository,
-  ) {}
+    public clienteRepository: ClienteRepository,
+  ) { }
 
   @authenticate({
     strategy: 'auth',
@@ -155,6 +155,42 @@ export class ClienteController {
     @param.filter(Cliente, {exclude: 'where'}) filter?: FilterExcludingWhere<Cliente>
   ): Promise<Cliente> {
     return this.clienteRepository.findById(id, filter);
+  }
+
+  @post('/cliente/findByCorreo')
+  @response(200, {
+    description: 'Cliente model instance',
+    content: {'application/json': {schema: getModelSchemaRef(Cliente)}}
+  })
+  async findByCorreo(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              Correo: {type: 'string'},
+            },
+          },
+        },
+      },
+    })
+    body: {Correo: string},
+  ): Promise<{id: number | undefined} | null> {
+    try {
+      const foundCliente = await this.clienteRepository.findOne({
+        where: {Correo: body.Correo},
+      });
+
+      if (foundCliente) {
+        return {id: foundCliente.id};
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error al buscar conductor por correo:', error);
+      throw error;
+    }
   }
 
   @authenticate({
