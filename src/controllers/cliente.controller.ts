@@ -159,8 +159,8 @@ export class ClienteController {
 
   @post('/cliente/findByCorreo')
   @response(200, {
-    description: 'Cliente model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Cliente)}}
+    description: 'ID of Cliente model instance',
+    content: {'application/json': {schema: {type: 'number'}}},
   })
   async findByCorreo(
     @requestBody({
@@ -176,19 +176,14 @@ export class ClienteController {
       },
     })
     body: {Correo: string},
-  ): Promise<{id: number | undefined} | null> {
+  ): Promise<number | undefined> {
     try {
       const foundCliente = await this.clienteRepository.findOne({
         where: {Correo: body.Correo},
       });
-
-      if (foundCliente) {
-        return {id: foundCliente.id};
-      } else {
-        return null;
-      }
+      return foundCliente ? foundCliente.id : undefined;
     } catch (error) {
-      console.error('Error al buscar conductor por correo:', error);
+      console.error('Error al buscar cliente por correo:', error);
       throw error;
     }
   }
