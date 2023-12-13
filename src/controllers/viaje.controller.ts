@@ -82,7 +82,6 @@ export class ViajeController {
 
     return this.viajeRepository.create(viaje);
   }
-
   async findFreeConductor(ubicaciones: string[]): Promise<number | null> {
     for (const ubicacion of ubicaciones) {
       // Buscar un conductor libre en la ubicación actual
@@ -101,6 +100,59 @@ export class ViajeController {
     return null;
   }
 
+  @post('/buscarConductoresCercanos')
+  @response(200, {
+    description: 'Array of conductorIds for nearby drivers',
+    content: {'application/json': {schema: {type: 'array', items: {type: 'number'}}}},
+  })
+  async buscarConductoresCercanos(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              ubicacion: {type: 'string'},
+            },
+            required: ['ubicacion'],
+          },
+        },
+      },
+    })
+    body: {ubicacion: string},
+  ): Promise<number[] | null> {
+    try {
+      // Get nearby node IDs using the provided location
+      const result = await this.graphService.getNearbyNodeIds(body.ubicacion, 4000);
+
+      // Find free drivers in the nearby locations
+      const conductorIds = await this.findFreeConductores(result);
+
+      return conductorIds;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error al buscar conductores cercanos.');
+    }
+  }
+  async findFreeConductores(ubicaciones: string[]): Promise<number[]> {
+    const conductorIds: number[] = [];
+
+    for (const ubicacion of ubicaciones) {
+      // Find a free driver in the current location
+      const conductorLibre = await this.ConductorRepository.findOne({
+        where: {
+          Ubicacion: ubicacion,
+          Estado: 'LIBRE',
+        },
+      });
+
+      if (conductorLibre) {
+        conductorIds.push(conductorLibre.id!);
+      }
+    }
+
+    return conductorIds;
+  }
 
   @authenticate({
     strategy: 'auth',
