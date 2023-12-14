@@ -55,37 +55,52 @@ export class ViajeController {
       },
     })
     viaje: Omit<Viaje, 'id'>,
-  ): Promise<Viaje | {message: string}> {
+  ): Promise<number | undefined> {
     viaje.Fecha = String(new Date());
-
-    try {
-      const result = await this.graphService.getNearbyNodeIds(viaje.Origen, 3000);
-
-      // Buscar un conductor libre en una de las ubicaciones cercanas
-      const conductorLibre = await this.findFreeConductor(result);
-
-      // Asignar el conductor al viaje
-      if (conductorLibre) {
-        viaje.conductorId = conductorLibre;
-
-        await this.conductorController.ocuparConductor(conductorLibre);
-
-      } else {
-        // Manejar el caso en que no hay conductores libres en las ubicaciones cercanas
-        return {message: 'No hay conductores libres en las ubicaciones cercanas.'};
-      }
-
-    } catch (error) {
-      console.error(error);
-      throw new Error('Error al calcular la distancia y el costo del viaje.');
-    }
-
-    return this.viajeRepository.create(viaje);
+    viaje.estadoSolicitudId = 1;
+    const respuesta = this.viajeRepository.create(viaje);
+    return (await respuesta).getId();
   }
 
-  async findFreeConductor(ubicaciones: string[]): Promise<number | null> {
+  @post('/buscarConductoresCercanos')
+  @response(200, {
+    description: 'Array of conductorIds for nearby drivers',
+    content: {'application/json': {schema: {type: 'array', items: {type: 'number'}}}},
+  })
+  async buscarConductoresCercanos(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              ubicacion: {type: 'string'},
+            },
+            required: ['ubicacion'],
+          },
+        },
+      },
+    })
+    body: {ubicacion: string},
+  ): Promise<number[] | null> {
+    try {
+      // Get nearby node IDs using the provided location
+      const result = await this.graphService.getNearbyNodeIds(body.ubicacion, 4000);
+
+      // Find free drivers in the nearby locations
+      const conductorIds = await this.findFreeConductores(result);
+
+      return conductorIds;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error al buscar conductores cercanos.');
+    }
+  }
+  async findFreeConductores(ubicaciones: string[]): Promise<number[]> {
+    const conductorIds: number[] = [];
+
     for (const ubicacion of ubicaciones) {
-      // Buscar un conductor libre en la ubicación actual
+      // Find a free driver in the current location
       const conductorLibre = await this.ConductorRepository.findOne({
         where: {
           Ubicacion: ubicacion,
@@ -94,12 +109,13 @@ export class ViajeController {
       });
 
       if (conductorLibre) {
-        return conductorLibre.id!;
+        conductorIds.push(conductorLibre.id!);
       }
     }
-    // Devolver null si no se encontró ningún conductor libre en las ubicaciones
-    return null;
+
+    return conductorIds;
   }
+
 
 
   @authenticate({
@@ -160,6 +176,50 @@ export class ViajeController {
     @param.where(Viaje) where?: Where<Viaje>,
   ): Promise<Count> {
     return this.viajeRepository.updateAll(viaje, where);
+  }
+
+  @patch('/asignarConductor')
+  @response(200, {
+    description: 'Viaje model instance with updated conductorId',
+    content: {'application/json': {schema: getModelSchemaRef(Viaje)}},
+  })
+  async asignarConductor(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              viajeId: {type: 'number'},
+              conductorId: {type: 'number'},
+            },
+            required: ['viajeId', 'conductorId'],
+          },
+        },
+      },
+    })
+    body: {viajeId: number; conductorId: number},
+  ): Promise<Viaje | {message: string}> {
+    try {
+      // Find the viaje by ID
+      const existingViaje = await this.viajeRepository.findById(body.viajeId);
+
+      if (!existingViaje) {
+        throw new Error('No se encontró el viaje con el ID proporcionado.');
+      }
+
+      // Update the conductorId
+      existingViaje.conductorId = body.conductorId;
+
+      // Save the updated viaje
+      const updatedViaje = await this.viajeRepository.update(existingViaje);
+
+      // Return the updated viaje
+      return updatedViaje!;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error al asignar el conductor al viaje.');
+    }
   }
 
   @authenticate({
