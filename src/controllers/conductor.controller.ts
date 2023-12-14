@@ -19,18 +19,21 @@ import {
   response,
 } from '@loopback/rest';
 import {configuracionSeguridad} from '../config/configuracion.seguridad';
-import {Conductor} from '../models';
+import {Conductor, UbicacionConductor} from '../models';
 import {ConductorRepository} from '../repositories';
 
 export class ConductorController {
   constructor(
     @repository(ConductorRepository)
     public conductorRepository: ConductorRepository,
-  ) { }
+  ) {}
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.guardarAccion]
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.guardarAccion,
+    ],
   })
   @post('/conductor')
   @response(200, {
@@ -53,7 +56,6 @@ export class ConductorController {
     return this.conductorRepository.create(conductor);
   }
 
-
   @post('/conductor-publico')
   @response(200, {
     description: 'Conductor model instance',
@@ -75,10 +77,12 @@ export class ConductorController {
     return this.conductorRepository.create(conductor);
   }
 
-
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.listarAccion]
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.listarAccion,
+    ],
   })
   @get('/conductor/count')
   @response(200, {
@@ -93,7 +97,10 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.listarAccion]
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.listarAccion,
+    ],
   })
   @get('/conductor')
   @response(200, {
@@ -115,7 +122,10 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.editarAccion]
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.editarAccion,
+    ],
   })
   @patch('/conductor')
   @response(200, {
@@ -138,7 +148,10 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.listarAccion]
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.listarAccion,
+    ],
   })
   @get('/conductor/{id}')
   @response(200, {
@@ -151,7 +164,8 @@ export class ConductorController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Conductor, {exclude: 'where'}) filter?: FilterExcludingWhere<Conductor>
+    @param.filter(Conductor, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Conductor>,
   ): Promise<Conductor> {
     return this.conductorRepository.findById(id, filter);
   }
@@ -174,7 +188,9 @@ export class ConductorController {
         },
       },
     })
-    body: {Correo: string},
+    body: {
+      Correo: string;
+    },
   ): Promise<number | undefined> {
     try {
       const foundConductor = await this.conductorRepository.findOne({
@@ -189,7 +205,10 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.editarAccion]
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.editarAccion,
+    ],
   })
   @patch('/conductor/{id}')
   @response(204, {
@@ -211,7 +230,46 @@ export class ConductorController {
 
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.editarAccion]
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.editarAccion,
+    ],
+  })
+  @post('/ubicacion-conductor')
+  @response(204, {
+    description: 'Conductor PATCH success',
+  })
+  async updateDriverLocationByEmail(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(UbicacionConductor),
+        },
+      },
+    })
+    datos: UbicacionConductor,
+  ): Promise<Conductor | null> {
+    let conductor = await this.conductorRepository.findOne({
+      where: {
+        Correo: datos.Correo,
+      },
+    });
+    if (conductor) {
+      conductor.Ubicacion = datos.idUbicacion;
+      conductor.Estado = datos.estado;
+      this.conductorRepository.updateById(conductor.id, conductor);
+    }else{
+      console.log('no se recibio ningun valor')
+    }
+    return conductor;
+  }
+
+  @authenticate({
+    strategy: 'auth',
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.editarAccion,
+    ],
   })
   @put('/conductor/{id}')
   @response(204, {
@@ -228,9 +286,7 @@ export class ConductorController {
   @response(204, {
     description: 'Conductor PATCH success',
   })
-  async ocuparConductor(
-    @param.path.number('id') id: number,
-  ): Promise<void> {
+  async ocuparConductor(@param.path.number('id') id: number): Promise<void> {
     const conductor: Conductor = await this.conductorRepository.findById(id);
 
     if (!conductor) {
@@ -245,7 +301,10 @@ export class ConductorController {
   }
   @authenticate({
     strategy: 'auth',
-    options: [configuracionSeguridad.menuConductorId, configuracionSeguridad.eliminarAccion]
+    options: [
+      configuracionSeguridad.menuConductorId,
+      configuracionSeguridad.eliminarAccion,
+    ],
   })
   @del('/conductor/{id}')
   @response(204, {
