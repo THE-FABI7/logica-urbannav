@@ -55,49 +55,10 @@ export class ViajeController {
       },
     })
     viaje: Omit<Viaje, 'id'>,
-  ): Promise<Viaje | {message: string}> {
+  ): Promise<number | undefined> {
     viaje.Fecha = String(new Date());
-
-    try {
-      const result = await this.graphService.getNearbyNodeIds(viaje.Origen, 3000);
-
-      // Buscar un conductor libre en una de las ubicaciones cercanas
-      const conductorLibre = await this.findFreeConductor(result);
-
-      // Asignar el conductor al viaje
-      if (conductorLibre) {
-        viaje.conductorId = conductorLibre;
-
-        await this.conductorController.ocuparConductor(conductorLibre);
-
-      } else {
-        // Manejar el caso en que no hay conductores libres en las ubicaciones cercanas
-        return {message: 'No hay conductores libres en las ubicaciones cercanas.'};
-      }
-
-    } catch (error) {
-      console.error(error);
-      throw new Error('Error al calcular la distancia y el costo del viaje.');
-    }
-
-    return this.viajeRepository.create(viaje);
-  }
-  async findFreeConductor(ubicaciones: string[]): Promise<number | null> {
-    for (const ubicacion of ubicaciones) {
-      // Buscar un conductor libre en la ubicación actual
-      const conductorLibre = await this.ConductorRepository.findOne({
-        where: {
-          Ubicacion: ubicacion,
-          Estado: 'LIBRE',
-        },
-      });
-
-      if (conductorLibre) {
-        return conductorLibre.id!;
-      }
-    }
-    // Devolver null si no se encontró ningún conductor libre en las ubicaciones
-    return null;
+    const respuesta = this.viajeRepository.create(viaje);
+    return (await respuesta).getId();
   }
 
   @post('/buscarConductoresCercanos')
