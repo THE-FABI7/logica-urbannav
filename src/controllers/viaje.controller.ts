@@ -57,6 +57,7 @@ export class ViajeController {
     viaje: Omit<Viaje, 'id'>,
   ): Promise<number | undefined> {
     viaje.Fecha = String(new Date());
+    viaje.estadoSolicitudId = 1;
     const respuesta = this.viajeRepository.create(viaje);
     return (await respuesta).getId();
   }
@@ -114,6 +115,8 @@ export class ViajeController {
 
     return conductorIds;
   }
+
+
 
   @authenticate({
     strategy: 'auth',
@@ -173,6 +176,50 @@ export class ViajeController {
     @param.where(Viaje) where?: Where<Viaje>,
   ): Promise<Count> {
     return this.viajeRepository.updateAll(viaje, where);
+  }
+
+  @patch('/asignarConductor')
+  @response(200, {
+    description: 'Viaje model instance with updated conductorId',
+    content: {'application/json': {schema: getModelSchemaRef(Viaje)}},
+  })
+  async asignarConductor(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              viajeId: {type: 'number'},
+              conductorId: {type: 'number'},
+            },
+            required: ['viajeId', 'conductorId'],
+          },
+        },
+      },
+    })
+    body: {viajeId: number; conductorId: number},
+  ): Promise<Viaje | {message: string}> {
+    try {
+      // Find the viaje by ID
+      const existingViaje = await this.viajeRepository.findById(body.viajeId);
+
+      if (!existingViaje) {
+        throw new Error('No se encontró el viaje con el ID proporcionado.');
+      }
+
+      // Update the conductorId
+      existingViaje.conductorId = body.conductorId;
+
+      // Save the updated viaje
+      const updatedViaje = await this.viajeRepository.update(existingViaje);
+
+      // Return the updated viaje
+      return updatedViaje!;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error al asignar el conductor al viaje.');
+    }
   }
 
   @authenticate({
