@@ -29,7 +29,7 @@ export class Automovil extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+    required: false,
   })
   Foto: string;
 

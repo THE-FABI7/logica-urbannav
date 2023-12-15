@@ -170,7 +170,7 @@ export class LocationController {
       const locations = await this.locationRepository.find();
 
       // Mapear las locaciones a un objeto que contiene pares de id y nombre
-      const idsAndNames: {[key: string]: string} = [];
+      const idsAndNames: {[key: string]: string} = {};
       locations.forEach(location => {
         idsAndNames[location._id!] = location.Name;
       });
