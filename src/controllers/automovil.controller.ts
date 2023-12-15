@@ -90,6 +90,8 @@ export class AutomovilController {
     return this.automovilRepository.find(filter);
   }
 
+
+
   @authenticate({
     strategy: 'auth',
     options: [configuracionSeguridad.menuAutomovilId, configuracionSeguridad.editarAccion]
@@ -112,6 +114,8 @@ export class AutomovilController {
   ): Promise<Count> {
     return this.automovilRepository.updateAll(automovil, where);
   }
+
+
 
   @authenticate({
     strategy: 'auth',

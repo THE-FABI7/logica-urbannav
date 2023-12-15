@@ -52,7 +52,7 @@ export class Automovil extends Entity {
   FechaDelAutomovil: string;
 
   @property({
-    type: 'date',
+    type: 'string',
     required: true,
   })
   Soat: string;
