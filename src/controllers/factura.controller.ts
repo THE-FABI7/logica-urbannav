@@ -24,6 +24,7 @@ import {configuracionSeguridad} from '../config/configuracion.seguridad';
 import {configuracionNotificaciones} from '../config/notificaciones.config';
 import {Factura} from '../models';
 import {ClienteRepository, ConductorRepository, FacturaRepository, PagoRepository, ViajeRepository} from '../repositories';
+import {GraphService} from '../services';
 import {NotificacionesService} from '../services/notificaciones.service';
 export class FacturaController {
   constructor(
@@ -39,6 +40,8 @@ export class FacturaController {
     public conductorRepository: ConductorRepository,
     @service(NotificacionesService)
     public servicioNotificaciones: NotificacionesService,
+    @service(GraphService)
+    private graphService: GraphService
   ) { }
 
 
@@ -54,7 +57,7 @@ export class FacturaController {
         'application/json': {
           schema: getModelSchemaRef(Factura, {
             title: 'NewFactura',
-            exclude: ['id'],
+            exclude: ['id', 'Precio'],
           }),
         },
       },
@@ -64,9 +67,12 @@ export class FacturaController {
     let facturaCreada = await this.facturaRepository.create(factura);
     let viaje = await this.viajeRepository.findById(factura.viajeId);
     let cliente = await this.clienteRepository.findById(viaje.clienteId);
-    let conductor = await this.conductorRepository.findById(viaje.conductorId);
+    let conductor = await this.conductorRepository.findById(viaje.conductorId)
+    let precio = await this.graphService.dijkstraTotalDise(viaje.Origen, viaje.Destino);
+    facturaCreada.Precio = precio.cost;
+    await this.facturaRepository.updateById(facturaCreada.id, {Precio: precio.cost});
+    await this.viajeRepository.updateById(viaje.id, {facturaId: facturaCreada.id});
 
-    console.log(viaje.id);
 
     //Notificar de la creacion de cuenta via correo electronico
     try {

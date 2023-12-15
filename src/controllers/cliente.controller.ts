@@ -5,7 +5,7 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
   del,
@@ -20,12 +20,14 @@ import {
 } from '@loopback/rest';
 import {configuracionSeguridad} from '../config/configuracion.seguridad';
 import {Cliente} from '../models';
-import {ClienteRepository} from '../repositories';
+import {ClienteRepository, PagoRepository} from '../repositories';
 
 export class ClienteController {
   constructor(
     @repository(ClienteRepository)
     public clienteRepository: ClienteRepository,
+    @repository(PagoRepository)
+    public pagoRepository: PagoRepository,
   ) { }
 
   @authenticate({
@@ -72,10 +74,17 @@ export class ClienteController {
     })
     cliente: Omit<Cliente, 'id'>,
   ): Promise<Cliente> {
-    return this.clienteRepository.create(cliente);
+    let clienteCreado: Cliente;
+
+    // Crear el cliente
+    try {
+      clienteCreado = await this.clienteRepository.create(cliente);
+    } catch (error) {
+      console.error('Error al crear el cliente:', error);
+      throw error;
+    }
+    return clienteCreado;
   }
-
-
 
   @authenticate({
     strategy: 'auth',

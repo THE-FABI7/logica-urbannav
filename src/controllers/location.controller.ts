@@ -165,12 +165,16 @@ export class LocationController {
       },
     },
   })
-  async getIdsAndNames(): Promise<{id: string; name: string}[]> {
+  async getIdsAndNames(): Promise<{[key: string]: string}> {
     try {
       const locations = await this.locationRepository.find();
 
-      // Mapear las locaciones a un formato que contiene solo id y nombre
-      const idsAndNames = locations.map(location => ({id: location._id!, name: location.Name}));
+      // Mapear las locaciones a un objeto que contiene pares de id y nombre
+      const idsAndNames: {[key: string]: string} = [];
+      locations.forEach(location => {
+        idsAndNames[location._id!] = location.Name;
+      });
+
       return idsAndNames;
     } catch (error) {
       console.error('Error al obtener IDs y nombres de locaciones:', error);

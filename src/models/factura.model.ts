@@ -31,7 +31,7 @@ export class Factura extends Entity {
 
   @property({
     type: 'number',
-    required: true,
+    required: false,
   })
   Precio: number;
 
